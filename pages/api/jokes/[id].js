@@ -1,9 +1,14 @@
-import { jokes } from "../../../lib/data.js";
+import dbConnect from "@/db/connect";
+import Joke from "@/db/models/Joke";
 
-export default function handler(request, response) {
+export default async function handler(request, response) {
+  // connect to database
+  await dbConnect();
+
+  // read from database
   const { id } = request.query;
 
-  const joke = jokes.find((joke) => joke.id === id);
+  const joke = await Joke.findById(id);
 
   if (!joke) {
     return response.status(404).json({ status: "Not Found" });
